@@ -1,23 +1,40 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import SearchBar from './modules/SearchBar';
+import ResultBox from './modules/ResultBox'
+import setFetchSearchData from './modules/searchLogic';
+
 
 function App() {
+  const defaultText = 'To search for people type a name\n into the search bar and press "SEARCH"';
+  const loadingText = "LOADING";
+  const [searchResult, setSearchResult] = useState(defaultText);
+
+
+  function getRandomInt(min, max) {
+    return ( Math.random() * (max - min + 1) + min );
+  }
+
+
+  function startFetching() {
+    const delay = getRandomInt(700, 1500);
+
+    setSearchResult(loadingText);
+    setTimeout(() => fetchData(), delay);
+  }
+
+
+  async function fetchData() {
+    const searchData = await setFetchSearchData();
+
+    setSearchResult(searchData || defaultText);
+  }
+
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="main-app-box">
+      <SearchBar fetchCommand={() => startFetching} />
+      <ResultBox searchResult={searchResult} />
     </div>
   );
 }

@@ -1,0 +1,21 @@
+.result-box {
+    position: relative;
+    border: 1px solid black;
+    height: 16em;
+    background-color: rgb(238, 238, 238);
+}
+
+.result-text {
+    position: absolute;
+    width: 60%;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    margin: 0;
+}
+
+.text-separator-div {
+    border: none;
+    margin: default;
+}
