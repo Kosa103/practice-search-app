@@ -1,7 +1,11 @@
-export async function setFetchSearchData() {
+export async function fetchSearchData() {
     const input = document.getElementById("search-input");
 
     if (input.value) {
+        if (input.value.toUpperCase() === "FAIL") {
+            return "ERROR";
+        }
+
         const url = `https://gorest.co.in/public-api/users?name=${input.value}`;
 
         const data = await fetch(url).then(res => {
@@ -25,4 +29,4 @@ export async function setFetchSearchData() {
     }
 }
 
-export default setFetchSearchData;
+export default fetchSearchData;

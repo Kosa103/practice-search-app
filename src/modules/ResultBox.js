@@ -8,7 +8,7 @@ function ResultBox(props) {
 
     function renderResult() {
         if (searchResult.length) {
-            if (typeof (searchResult) === "object") {
+            if (Array.isArray(searchResult)) {
                 const person = searchResult[0];
 
                 return (
@@ -23,11 +23,16 @@ function ResultBox(props) {
                     </div>
                 );
             } else if (typeof(searchResult) === "string") {
-                return (
-                    <div className="text-separator-div">
-                        <p>{searchResult}</p>
-                    </div>
-                );
+                if (searchResult !== "ERROR") {
+                    return (
+                        <div className="text-separator-div">
+                            <p>{searchResult}</p>
+                        </div>
+                    );
+                } else {
+                    throw new Error("ARTIFICALLY TRIGGERED ERROR:");
+                }
+
             } else {
                 console.log("Unknown error while rendering search result!")
             }
