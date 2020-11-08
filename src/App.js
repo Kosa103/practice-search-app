@@ -2,7 +2,8 @@ import { useState } from 'react';
 import './App.css';
 import { ErrorBoundary } from 'react-error-boundary';
 import SearchBar from './modules/SearchBar';
-import ResultBox from './modules/ResultBox'
+import ResultBox from './modules/ResultBox';
+import SearchHistory from './modules/SearchHistory';
 import fetchSearchData from './modules/searchLogic';
 
 
@@ -16,7 +17,7 @@ function ErrorFallback({error}) {
 }
 
 
-function App(props) {
+function App() {
   const defaultText = 'To search for people type a name\n into the search bar and press "SEARCH"';
   const loadingText = "LOADING";
 
@@ -48,6 +49,7 @@ function App(props) {
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <ResultBox searchResult={searchResult} />
       </ErrorBoundary>
+      <SearchHistory />
     </div>
   );
 }
