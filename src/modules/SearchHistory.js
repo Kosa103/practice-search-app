@@ -1,29 +1,39 @@
-// Context didn't work through modules. Working on that...
-// Added contents to App.js
+import React from 'react';
 
-/* import * as React from 'react';
-import SearchHistoryContext from '../App'
-import "./SearchHistory.css";
+import { SearchHistoryContext } from '../App';
 
 
 function SearchHistory() {
-    const history = React.useContext(SearchHistoryContext);
-
-
+    const context = React.useContext(SearchHistoryContext);
+    const history = context.history;
+    const load = context.load;
+  
+  
     function renderSearchHistory() {
+      if (history.length && Array.isArray(history)) {
+        const list = history.map((person, index) => {
+          return (
+            <p key={`${person.id}-${index}`} 
+               onClick={() => load(person.id)}
+               className="search-history-element">
+                 {person.name}
+            </p>
+          );
+        });
+        return list;
+      } else {
         return (
-            <p>Placeholder for search history</p>
+          <p>No search history</p>
         );
+      }
     }
-
-    console.log("SEARCH HISTORY:");
-    console.log(history);
+  
     return (
         <div className="search-history-box">
+            <h3>SEARCH HISTORY:</h3>
             {renderSearchHistory()}
         </div>
     );
 }
 
 export default SearchHistory;
- */
