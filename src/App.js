@@ -10,12 +10,23 @@ import fetchSearchData from './modules/searchLogic';
 export const SearchHistoryContext = React.createContext();
 
 
-function ErrorFallback({error, resetErrorBoundary}) {
+function ErrorFallback({error, resetErrorBoundary, searchResult}) {
+  React.useEffect(() => {
+    if (typeof(searchResult) === "string") {
+      if (searchResult.toUpperCase() !== "ERROR") {
+        resetErrorBoundary();
+      } else {
+      }
+    } else {
+      resetErrorBoundary();
+    }
+  });
+
   return (
-    <div className="error-box" onClick={resetErrorBoundary}>
+    <div className="error-box">
       <p className="error-pre-message">An error occured:</p>
       <pre className="error-message">{error.message}</pre>
-      <p className="error-post-message">Click on this message to reset the display.</p>
+      <p className="error-post-message">Search anything other than 'fail'! (not case sensitive)</p>
     </div>
   );
 }
@@ -25,7 +36,6 @@ function App() {
   const defaultText = 'To search for people type a name\n into the search bar and press "SEARCH"';
   const loadingText = "LOADING";
 
-
   const [searchResult, setSearchResult] = React.useState(defaultText);
   const [searchHistory, setSearchHistory] = React.useState([]);
 
@@ -34,14 +44,12 @@ function App() {
     return (Math.random() * (max - min + 1) + min);
   }
 
-
   function startFetching() {
     const delay = getRandomInt(700, 1500);
 
     setSearchResult(loadingText);
     setTimeout(() => fetchData(), delay);
   }
-
 
   async function fetchData() {
     const newSearchHistory = searchHistory;
@@ -58,7 +66,6 @@ function App() {
     setSearchResult(searchData || defaultText);
   }
 
-
   function loadPersonFromCache(id) {
     let cachedPerson = null;
 
@@ -72,14 +79,21 @@ function App() {
     setSearchResult([cachedPerson]);
   }
 
+  const renderResultBox = () => <ResultBox searchResult={searchResult} />;
+
 
   return (
     <div className="main-app-box">
       <SearchBar fetchCommand={() => startFetching} />
       <ErrorBoundary 
-        FallbackComponent={ErrorFallback}
-        onReset={() => setSearchResult(defaultText)}>
-        <ResultBox searchResult={searchResult} />
+        FallbackComponent={({ error, resetErrorBoundary }) => <ErrorFallback 
+                                                                error={error} 
+                                                                resetErrorBoundary={resetErrorBoundary} 
+                                                                searchResult={searchResult}
+                                                              />}
+        onReset={() => renderResultBox()}>
+
+        {renderResultBox()}
       </ErrorBoundary>
       <SearchHistoryContext.Provider value={{history: searchHistory, load: loadPersonFromCache}}>
         <SearchHistory />
@@ -87,9 +101,5 @@ function App() {
     </div>
   );
 }
-
-/* export function useSearchHistoryContext() {
-  return React.useContext(SearchHistoryContext);
-} */
 
 export default App;
